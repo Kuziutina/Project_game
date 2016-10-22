@@ -15,19 +15,15 @@ public class Eggs extends JComponent {
 	public boolean getGame(){
 		return game;
 	}
-	
 	public boolean setGame(boolean g){
 		this.game = g;
 		return game;
 	}
-	
 	public int setI(int i){
 		this.i = 0;
 		return i;
 	}
- 
     public Eggs() {
-		
         
         Timer timer = new Timer(30, new ActionListener() {
             @Override
@@ -57,7 +53,6 @@ public class Eggs extends JComponent {
     void setXW(int b){
         this.b = b;
     }
- 
     @Override
     protected void paintComponent(Graphics g) {
 		int width = getWidth();
@@ -71,12 +66,13 @@ public class Eggs extends JComponent {
 			g2d.setPaint(Color.white);
 			g.fillRect(xw, 400, 100, 70);
 			g.fillOval(x1, y, 75, 125);
-			y += 5 + i / 3;
+			y += 5 + i / 5;
 			g.setColor(new Color(0, 0, 0));
 		}
 		else {
 			g.setColor(new Color(0, 0, 0));
-			g.drawString("Game over", width / 2 - 50, height/ 2);
+			g.drawString("Play again?", width / 2 - 50, height/ 2);
+			g.drawString("Y/N", width / 2 - 25, height/ 2 + 25);
 		}
 		g.drawString("" + (i * 10), width - 50, height - 50);
 	}
