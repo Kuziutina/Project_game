@@ -8,15 +8,16 @@ public class Wolf  {
 	
 	public static void main(String[] args){
 			
-		JFrame frame = new JFrame("Wolf");
+
+		
+		SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {		
+            	JFrame frame = new JFrame("Wolf");
                 final Eggs cort = new Eggs();
                 frame.add(cort);
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setSize(700, 500);
-		
-		SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
                 frame.addKeyListener(new KeyAdapter() {
 					public void keyPressed(KeyEvent e) {
 						cort.setXW (e.getKeyCode());

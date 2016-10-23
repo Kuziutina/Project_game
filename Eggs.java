@@ -6,11 +6,14 @@ import java.awt.geom.Ellipse2D;
 import java.util.Random;
  
 public class Eggs extends JComponent {
-    private int x1 = 100, b, xw = 250;
-	private int y = 50;
+    
+	private int y = 50, b;
 	private int i = 0;
+	private int x1 = 175;
+	private int xw = 175;
 	private boolean game = true;
-    private int [] x = new int[] {100, 250, 400};
+	private int block = 175, m = 175;
+    private int [] x = new int[] {1, 2, 3};
 	
 	public boolean getGame(){
 		return game;
@@ -28,21 +31,35 @@ public class Eggs extends JComponent {
         Timer timer = new Timer(30, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+       			int w = getWidth();
+		        int h = getHeight();
+		        if (m != block){
+       				x1 = block * x1 / m;
+       				xw = block * xw / m;
+       				m = block;
+       			}
+
 				Random r = new Random();
-				if (y > 350) {
+				if (y > h - 70) {
 					y = 50;
 					if (x1 == xw) {
 						i++;
 					}
 					else {
+						//System.out.println();
+						//System.out.println(x1 + " " + xw);
 						game = false;
 					}
-					x1 = x[r.nextInt(x.length)];
+					x1 = block * x[r.nextInt(x.length)];
+					//System.out.println(block + " " + x1);
 				}
-				if ((b == 39) && (xw < 400))
-					xw += 150;
-				if ((b == 37) && (xw > 100))
-					xw = xw - 150;
+				if ((b == 39) && (xw < block * 3))
+					xw += block;
+				if ((b == 37) && (xw > block)){
+					xw = xw - block;
+					//System.out.println(xw);
+				}
+
 				b = 0;
 				repaint();
             }
@@ -57,6 +74,8 @@ public class Eggs extends JComponent {
     protected void paintComponent(Graphics g) {
 		int width = getWidth();
         int height = getHeight();
+        //System.out.println(width);
+        block = width/4;
 		setBackground(new Color(168, 188, 255));
 		g.setColor(new Color(168, 188, 255));
         g.fillRect(0, 0, width, height);
@@ -64,7 +83,7 @@ public class Eggs extends JComponent {
 		if (game) {
 			Graphics2D g2d = (Graphics2D) g;
 			g2d.setPaint(Color.white);
-			g.fillRect(xw, 400, 100, 70);
+			g.fillRect(xw, height-70, 100, 70);
 			g.fillOval(x1, y, 75, 125);
 			y += 5 + i / 5;
 			g.setColor(new Color(0, 0, 0));
