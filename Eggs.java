@@ -4,13 +4,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
 import java.util.Random;
+import java.net.*;
+import java.applet.Applet;
+import java.io.*;
+import javax.imageio.*;
  
 public class Eggs extends JComponent {
-    private int x1 = 100, b, xw = 250;
-	private int y = 50;
+    
+    private final int maxk = 6;
+    public int start = 700 / maxk;
+	private int y = 50, b;
 	private int i = 0;
+	private int x1 = start;
+	private int xw = start;
 	private boolean game = true;
-    private int [] x = new int[] {100, 250, 400};
+	private int block = start, m = start;
+    private Image image;
+
 	
 	public boolean getGame(){
 		return game;
@@ -23,13 +33,22 @@ public class Eggs extends JComponent {
 		this.i = 0;
 		return i;
 	}
-    public Eggs() {
-        
+    public Eggs() { 
+
         Timer timer = new Timer(30, new ActionListener() {
+  
             @Override
             public void actionPerformed(ActionEvent e) {
+       			int w = getWidth();
+		        int h = getHeight();
+		        if (m != block){
+       				x1 = block * x1 / m;
+       				xw = block * xw / m;
+       				m = block;
+       			}
+
 				Random r = new Random();
-				if (y > 350) {
+				if (y > h - 97) {
 					y = 50;
 					if (x1 == xw) {
 						i++;
@@ -37,12 +56,14 @@ public class Eggs extends JComponent {
 					else {
 						game = false;
 					}
-					x1 = x[r.nextInt(x.length)];
+					x1 = block * (r.nextInt(maxk - 1)+1);
 				}
-				if ((b == 39) && (xw < 400))
-					xw += 150;
-				if ((b == 37) && (xw > 100))
-					xw = xw - 150;
+				if ((b == 39) && (xw < block * (maxk - 1)))
+					xw += block;
+				if ((b == 37) && (xw > block)){
+					xw = xw - block;
+				}
+
 				b = 0;
 				repaint();
             }
@@ -55,25 +76,44 @@ public class Eggs extends JComponent {
     }
     @Override
     protected void paintComponent(Graphics g) {
+    	Image egg = null;
+		Image wolf = null;
+		Image fon = null;
+		try{
+		wolf = ImageIO.read(new File("wolf.png"));
+		egg = ImageIO.read(new File("egg.png"));
+		fon = ImageIO.read(new File("fon.jpg"));
+		}
+		catch(IOException e){
+			
+		}
 		int width = getWidth();
         int height = getHeight();
-		setBackground(new Color(168, 188, 255));
-		g.setColor(new Color(168, 188, 255));
-        g.fillRect(0, 0, width, height);
+        g.drawImage(fon, 0, 0, width, height, null);
+
+        block = (width - 80)/maxk;
+
 		g.setFont(new Font("Arial", 1, 20));
 		if (game) {
 			Graphics2D g2d = (Graphics2D) g;
 			g2d.setPaint(Color.white);
-			g.fillRect(xw, 400, 100, 70);
-			g.fillOval(x1, y, 75, 125);
+			g.drawImage(egg, x1, y, null);
+			g.drawImage(wolf,xw-27,height-63,null);
+	
 			y += 5 + i / 5;
-			g.setColor(new Color(0, 0, 0));
+			
 		}
 		else {
+			g.setColor(new Color(255, 255, 255));
+			g.fillRect(width/2 - 90, height/2 - 40, 175, 100);
 			g.setColor(new Color(0, 0, 0));
 			g.drawString("Play again?", width / 2 - 50, height/ 2);
 			g.drawString("Y/N", width / 2 - 25, height/ 2 + 25);
 		}
-		g.drawString("" + (i * 10), width - 50, height - 50);
+
+		g.setColor(new Color(255, 255, 255));
+		g.fillRect(width-70, height - 70, 60, 30);
+		g.setColor(new Color(0, 0, 0));
+		g.drawString("" + (i * 10), width - 60, height - 50);
 	}
 }
